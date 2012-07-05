@@ -185,23 +185,9 @@
       }
         break;
       case MKNKPostDataEncodingTypeJSON: {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED < 50000
-        if(NSClassFromString(@"NSJSONSerialization")) {
         [self.request setValue:
          [NSString stringWithFormat:@"application/json; charset=%@", charset]
             forHTTPHeaderField:@"Content-Type"];
-        }
-        else {
-          [self.request setValue:
-             [NSString stringWithFormat:@"application/x-www-form-urlencoded; charset=%@", charset]
-                forHTTPHeaderField:@"Content-Type"];
-
-        }
-#else
-        [self.request setValue:
-           [NSString stringWithFormat:@"application/x-www-form-urlencoded; charset=%@", charset]
-              forHTTPHeaderField:@"Content-Type"];
-#endif
       }
         break;
       case MKNKPostDataEncodingTypePlist: {
