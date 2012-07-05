@@ -979,7 +979,7 @@
         
         // invalid or revoked certificate
         [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
-        //[challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+        [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
       }
     }        
     else if (self.authHandler) {
