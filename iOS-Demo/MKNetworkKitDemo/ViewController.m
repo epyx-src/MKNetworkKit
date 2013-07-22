@@ -28,15 +28,6 @@
 
 @implementation ViewController
 
-@synthesize uploadOperation = _uploadOperation;
-@synthesize downloadOperation = _downloadOperation;
-@synthesize currencyOperation = _currencyOperation;
-
-@synthesize downloadProgessBar = _downloadProgessBar;
-@synthesize uploadProgessBar = _uploadProgessBar;
-@synthesize userTextField = _userTextField;
-@synthesize passwordTextField = _passwordTextField;
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -79,7 +70,7 @@
         
     self.currencyOperation = [ApplicationDelegate.yahooEngine currencyRateFor:@"SGD" 
                                                                    inCurrency:@"USD" 
-                                                                 onCompletion:^(double rate) {
+                                                                 completionHandler:^(double rate) {
                                                                      
                                                                      [[[UIAlertView alloc] initWithTitle:@"Today's Singapore Dollar Rates"                              
                                                                                                                      message:[NSString stringWithFormat:@"%.2f", rate]
@@ -87,8 +78,8 @@
                                                                                                            cancelButtonTitle:NSLocalizedString(@"Dismiss", @"")
                                                                                                            otherButtonTitles:nil] show];
                                                                  } 
-                                                                      onError:^(NSError* error) {
-                                                                          
+                                                                      errorHandler:^(NSError* error) {
+                                                                        
                                                                           
                                                                           DLog(@"%@\t%@\t%@\t%@", [error localizedDescription], [error localizedFailureReason], 
                                                                                [error localizedRecoveryOptions], [error localizedRecoverySuggestion]);
@@ -106,7 +97,7 @@
     }
     NSString *uploadPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingFormat:@"/SampleImage.jpg"];
     self.uploadOperation = [ApplicationDelegate.sampleAuth uploadImageFromFile:uploadPath 
-                                                                       onCompletion:^(NSString *twitPicURL) {
+                                                                       completionHandler:^(NSString *twitPicURL) {
                                                                            
                                                                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Uploaded to"                              
                                                                                                                            message:twitPicURL
@@ -116,7 +107,7 @@
                                                                            [alert show];
                                                                            self.uploadProgessBar.progress = 0.0;
                                                                        } 
-                                                                            onError:^(NSError* error) {
+                                                                            errorHandler:^(NSError* error) {
                                                                                 
                                                                                 [UIAlertView showWithError:error];
                                                                             }];    
@@ -132,7 +123,7 @@
 -(IBAction)downloadFileTapped:(id)sender {
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-    NSString *cachesDirectory = [paths objectAtIndex:0];
+    NSString *cachesDirectory = paths[0];
 	NSString *downloadPath = [cachesDirectory stringByAppendingPathComponent:@"DownloadedFile.pdf"];
     
     self.downloadOperation = [ApplicationDelegate.sampleDownloader downloadFatAssFileFrom:@"http://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSURLRequest_Class/NSURLRequest_Class.pdf" 
@@ -144,7 +135,7 @@
         self.downloadProgessBar.progress = progress;
     }];
     
-    [self.downloadOperation onCompletion:^(MKNetworkOperation* completedRequest) {
+    [self.downloadOperation addCompletionHandler:^(MKNetworkOperation* completedRequest) {
         
         DLog(@"%@", completedRequest);   
         self.downloadProgessBar.progress = 0.0f;
@@ -155,7 +146,7 @@
                                               otherButtonTitles:nil];
         [alert show];
     }
-                                 onError:^(NSError* error) {
+                                 errorHandler:^(MKNetworkOperation *errorOp, NSError* error) {
                                      
                                      DLog(@"%@", error);
                                      [UIAlertView showWithError:error];
@@ -179,7 +170,8 @@
     
     //[ApplicationDelegate.sampleAuth basicAuthTest];
     //[ApplicationDelegate.sampleAuth digestAuthTest];
-    [ApplicationDelegate.sampleAuth digestAuthTestWithUser:self.userTextField.text password:self.passwordTextField.text];
-    //[ApplicationDelegate.sampleAuth clientCertTest];
+    //[ApplicationDelegate.sampleAuth digestAuthTestWithUser:self.userTextField.text password:self.passwordTextField.text];
+    //[ApplicationDelegate.sampleAuth serverTrustTest];
+    [ApplicationDelegate.sampleAuth clientCertTest];
 }
 @end

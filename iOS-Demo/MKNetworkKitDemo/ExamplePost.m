@@ -12,18 +12,16 @@
 
 -(MKNetworkOperation*) postDataToServer {
     
-    MKNetworkOperation *op = [self operationWithPath:@"Versions/1.5/login.php" 
-                                              params:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                      @"bobs@thga.me", @"email",
-                                                      @"12345678", @"password", nil]
+    MKNetworkOperation *op = [self operationWithPath:@"index.php" 
+                                              params:@{@"email": @"stock_user",
+                                                      @"password": @"stock_pass",
+                              @"where":@"/", @"f":@"signin"}
                                           httpMethod:@"POST"];    
     
-    //[op setUsername:@"bobs@thga.me" password:@"12345678"];
-
-    [op onCompletion:^(MKNetworkOperation *operation) {
+    [op addCompletionHandler:^(MKNetworkOperation *operation) {
         
         DLog(@"%@", operation);
-    } onError:^(NSError *error) {
+    } errorHandler:^(MKNetworkOperation *errorOp, NSError* error) {
 
         DLog(@"%@", error);
     }];

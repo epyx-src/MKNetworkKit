@@ -27,14 +27,6 @@
 
 @implementation AppDelegate
 
-@synthesize window = _window;
-@synthesize yahooEngine = _yahooEngine;
-@synthesize twitPicUploader = _twitPicUploader;
-@synthesize sampleDownloader = _sampleDownloader;
-@synthesize samplePoster = _samplePoster;
-@synthesize sampleAuth = _sampleAuth;
-@synthesize flickrEngine = flickrEngine_;
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
@@ -53,7 +45,7 @@
                                            customHeaderFields:nil];
     
     self.sampleDownloader = [[ExampleDownloader alloc] initWithHostName:nil customHeaderFields:nil];
-    self.samplePoster = [[ExamplePost alloc] initWithHostName:@"thgame.phpfog.com" customHeaderFields:nil];
+    self.samplePoster = [[ExamplePost alloc] initWithHostName:@"stockfresh.com" customHeaderFields:nil];
     self.sampleAuth = [[AuthTestEngine alloc] initWithHostName:@"api.mk.sg" customHeaderFields:nil];
     [self.sampleAuth useCache];
     self.flickrEngine = [[FlickrEngine alloc] initWithHostName:@"api.flickr.com" customHeaderFields:nil];

@@ -18,10 +18,10 @@
   
   [op setUsername:@"admin" password:@"password" basicAuth:YES];
   
-  [op onCompletion:^(MKNetworkOperation *operation) {
+  [op addCompletionHandler:^(MKNetworkOperation *operation) {
     
     DLog(@"%@", [operation responseString]); 
-  } onError:^(NSError *error) {
+  } errorHandler:^(MKNetworkOperation *errorOp, NSError* error) {
     
     DLog(@"%@", [error localizedDescription]);         
   }];
@@ -37,10 +37,10 @@
   
   [op setUsername:@"admin" password:@"password"];
   
-  [op onCompletion:^(MKNetworkOperation *operation) {
+  [op addCompletionHandler:^(MKNetworkOperation *operation) {
     
     DLog(@"%@", [operation responseString]); 
-  } onError:^(NSError *error) {
+  } errorHandler:^(MKNetworkOperation *errorOp, NSError* error) {
     
     DLog(@"%@", [error localizedDescription]);         
   }];
@@ -55,10 +55,10 @@
   [op setUsername:username password:password];
   [op setCredentialPersistence:NSURLCredentialPersistenceNone];
   
-  [op onCompletion:^(MKNetworkOperation *operation) {
+  [op addCompletionHandler:^(MKNetworkOperation *operation) {
     
     DLog(@"%@", [operation responseString]); 
-  } onError:^(NSError *error) {
+  } errorHandler:^(MKNetworkOperation *errorOp, NSError* error) {
     
     DLog(@"%@", [error localizedDescription]);         
   }];
@@ -66,34 +66,42 @@
 }
 
 
--(void) clientCertTest {
+-(void) serverTrustTest {
   
-  MKNetworkOperation *op = [self operationWithPath:@"mknetworkkit/client_auth.php"
-                                            params:nil 
-                                        httpMethod:@"GET" 
-                                               ssl:YES];
+  MKNetworkOperation *op = [self operationWithURLString:@"https://testbed.mknetworkkit.com"];  
   
-  NSString *certPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"client.p12"];
-  [op setClientCertificate:certPath];
-  
-  [op onCompletion:^(MKNetworkOperation *operation) {
+  [op addCompletionHandler:^(MKNetworkOperation *operation) {
     
     DLog(@"%@", [operation responseString]); 
-  } onError:^(NSError *error) {
+  } errorHandler:^(MKNetworkOperation *errorOp, NSError* error) {
     
     DLog(@"%@", [error localizedDescription]);         
+  }];
+  [self enqueueOperation:op];
+}
+
+-(void) clientCertTest {
+  
+  MKNetworkOperation *op = [self operationWithURLString:@"https://testbed.mknetworkkit.com"];
+  op.clientCertificate = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"client.p12"];
+  op.clientCertificatePassword = @"test";
+  
+  [op addCompletionHandler:^(MKNetworkOperation *operation) {
+    
+    DLog(@"%@", [operation responseString]);
+  } errorHandler:^(MKNetworkOperation *errorOp, NSError* error) {
+    
+    DLog(@"%@", [error localizedDescription]);
   }];
   [self enqueueOperation:op];
 }
 
 -(MKNetworkOperation*) uploadImageFromFile:(NSString*) file 
-                              onCompletion:(TwitPicBlock) completionBlock
-                                   onError:(MKNKErrorBlock) errorBlock {
+                              completionHandler:(TwitPicBlock) completionBlock
+                                   errorHandler:(MKNKErrorBlock) errorBlock {
   
   MKNetworkOperation *op = [self operationWithPath:@"mknetworkkit/upload.php" 
-                                            params:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                    @"YES", @"Submit",
-                                                    nil]
+                                            params:@{@"Submit": @"YES"}
                                         httpMethod:@"POST"];
   
   [op addFile:file forKey:@"image"];
@@ -101,14 +109,14 @@
   // setFreezable uploads your images after connection is restored!
   [op setFreezable:YES];
   
-  [op onCompletion:^(MKNetworkOperation* completedOperation) {
+  [op addCompletionHandler:^(MKNetworkOperation* completedOperation) {
     
     NSString *xmlString = [completedOperation responseString];
     
     DLog(@"%@", xmlString);
     completionBlock(xmlString);
   }
-           onError:^(NSError* error) {
+           errorHandler:^(MKNetworkOperation *errorOp, NSError* error) {
              
              errorBlock(error);
            }];
