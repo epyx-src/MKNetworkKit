@@ -11,10 +11,11 @@
 -(void) basicAuthTest;
 -(void) digestAuthTest;
 -(void)digestAuthTestWithUser:(NSString*)username password:(NSString*)password;
+-(void) serverTrustTest;
 -(void) clientCertTest;
 -(int) cacheMemoryCost;
 
 -(MKNetworkOperation*) uploadImageFromFile:(NSString*) file 
-                              onCompletion:(TwitPicBlock) completionBlock
-                                   onError:(MKNKErrorBlock) errorBlock;
+                              completionHandler:(TwitPicBlock) completionBlock
+                                   errorHandler:(MKNKErrorBlock) errorBlock;
 @end
