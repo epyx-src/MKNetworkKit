@@ -508,7 +508,7 @@ OSStatus extractIdentityAndTrust(CFDataRef inPKCS12Data,
 
 -(void) setUploadStream:(NSInputStream*) inputStream {
   
-#warning Method not tested yet.
+// Method not tested yet.
   self.request.HTTPBodyStream = inputStream;
 }
 
