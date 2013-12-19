@@ -214,7 +214,7 @@
 		50A5FCE816690C0700BB4A2F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0500;
 			};
 			buildConfigurationList = 50A5FCEB16690C0700BB4A2F /* Build configuration list for PBXProject "MKNetworkKit-Tests" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -342,6 +342,7 @@
 		50A5FCED16690C0700BB4A2F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
 			};
 			name = Debug;
 		};
